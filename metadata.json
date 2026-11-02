@@ -1,0 +1,6 @@
+{
+  "name": "Parchís de Hogwarts - Las 4 Casas",
+  "description": "Juego del Parchís mágico de las cuatro casas de Hogwarts (Gryffindor, Slytherin, Ravenclaw y Hufflepuff) para iPhone, iPad y navegador con 1-4 jugadores, 1 o 2 dados y despliegue para GitHub Pages.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
