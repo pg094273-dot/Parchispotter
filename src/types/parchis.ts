@@ -17,6 +17,36 @@ export interface HouseConfig {
 }
 
 export const HOUSES: Record<HouseId, HouseConfig> = {
+  hufflepuff: {
+    id: 'hufflepuff',
+    name: 'Hufflepuff',
+    latinMotto: 'Iustitia et Fidelitas',
+    primaryColor: '#c49a15',
+    secondaryColor: '#1c1917',
+    accentColor: '#fde047',
+    bgGradient: 'from-yellow-950 via-amber-950 to-stone-950',
+    animal: 'Tejón',
+    animalIcon: '🦡',
+    exitTile: 5,
+    corridorEntryTile: 68,
+    corner: 'top-left',
+    defaultCharacter: 'Cedric Diggory'
+  },
+  ravenclaw: {
+    id: 'ravenclaw',
+    name: 'Ravenclaw',
+    latinMotto: 'Sapientia et Ingenium',
+    primaryColor: '#1e3a8a',
+    secondaryColor: '#cd7f32',
+    accentColor: '#60a5fa',
+    bgGradient: 'from-blue-950 via-indigo-950 to-stone-950',
+    animal: 'Águila',
+    animalIcon: '🦅',
+    exitTile: 22,
+    corridorEntryTile: 17,
+    corner: 'bottom-left',
+    defaultCharacter: 'Luna Lovegood'
+  },
   gryffindor: {
     id: 'gryffindor',
     name: 'Gryffindor',
@@ -27,9 +57,9 @@ export const HOUSES: Record<HouseId, HouseConfig> = {
     bgGradient: 'from-amber-950 via-red-950 to-stone-950',
     animal: 'León',
     animalIcon: '🦁',
-    exitTile: 5,
-    corridorEntryTile: 68,
-    corner: 'top-left',
+    exitTile: 39,
+    corridorEntryTile: 34,
+    corner: 'bottom-right',
     defaultCharacter: 'Harry Potter'
   },
   slytherin: {
@@ -42,40 +72,10 @@ export const HOUSES: Record<HouseId, HouseConfig> = {
     bgGradient: 'from-emerald-950 via-teal-950 to-stone-950',
     animal: 'Serpiente',
     animalIcon: '🐍',
-    exitTile: 22,
-    corridorEntryTile: 17,
-    corner: 'top-right',
-    defaultCharacter: 'Draco Malfoy'
-  },
-  ravenclaw: {
-    id: 'ravenclaw',
-    name: 'Ravenclaw',
-    latinMotto: 'Sapientia et Ingenium',
-    primaryColor: '#1e3a8a',
-    secondaryColor: '#cd7f32',
-    accentColor: '#60a5fa',
-    bgGradient: 'from-blue-950 via-indigo-950 to-stone-950',
-    animal: 'Águila',
-    animalIcon: '🦅',
-    exitTile: 39,
-    corridorEntryTile: 34,
-    corner: 'bottom-right',
-    defaultCharacter: 'Luna Lovegood'
-  },
-  hufflepuff: {
-    id: 'hufflepuff',
-    name: 'Hufflepuff',
-    latinMotto: 'Iustitia et Fidelitas',
-    primaryColor: '#c49a15',
-    secondaryColor: '#1c1917',
-    accentColor: '#fde047',
-    bgGradient: 'from-yellow-950 via-amber-950 to-stone-950',
-    animal: 'Tejón',
-    animalIcon: '🦡',
     exitTile: 56,
     corridorEntryTile: 51,
-    corner: 'bottom-left',
-    defaultCharacter: 'Cedric Diggory'
+    corner: 'top-right',
+    defaultCharacter: 'Draco Malfoy'
   }
 };
 

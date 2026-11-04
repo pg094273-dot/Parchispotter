@@ -21,6 +21,11 @@ import { SetupModal } from './components/SetupModal';
 import { WinnerModal } from './components/WinnerModal';
 import { ExportModal } from './components/ExportModal';
 import { RulesModal } from './components/RulesModal';
+import { HogwartsIntroModal } from './components/HogwartsIntroModal';
+import { TurnDrawer } from './components/TurnDrawer';
+import { TurnAnnouncementModal } from './components/TurnAnnouncementModal';
+import { CenterDiceModal } from './components/CenterDiceModal';
+import { SideDiceHUD } from './components/SideDiceHUD';
 
 const STORAGE_KEY = 'parchis_hogwarts_saved_game_v2';
 
@@ -98,10 +103,18 @@ export default function App() {
   const [zoomLevel, setZoomLevel] = useState<number>(1.0);
   const [isFreeMoveMode, setIsFreeMoveMode] = useState<boolean>(false);
 
-  // Modals
+  // Modals & Drawers
+  const [isIntroOpen, setIsIntroOpen] = useState(true);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isAnnouncingTurn, setIsAnnouncingTurn] = useState(true);
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
+
+  // Trigger turn announcement whenever turn changes
+  useEffect(() => {
+    setIsAnnouncingTurn(true);
+  }, [currentTurnIndex]);
 
   // Active players in the match according to playerCount
   const activePlayers = useMemo(() => {
@@ -510,9 +523,9 @@ export default function App() {
     }, 450);
   };
 
-  // Bot auto-roll
+  // Bot auto-roll (waits for turn announcement to finish)
   useEffect(() => {
-    if (isBotTurn && dice.canRoll && !winner) {
+    if (isBotTurn && dice.canRoll && !winner && !isAnnouncingTurn && !isIntroOpen) {
       const timer = setTimeout(() => {
         soundManager.playDiceRoll();
         const val1 = Math.floor(Math.random() * 6) + 1;
@@ -537,10 +550,10 @@ export default function App() {
           activePlayer.house,
           'roll'
         );
-      }, 900);
+      }, 700);
       return () => clearTimeout(timer);
     }
-  }, [isBotTurn, dice.canRoll, winner, activePlayer, dice.count, addLog]);
+  }, [isBotTurn, dice.canRoll, winner, isAnnouncingTurn, isIntroOpen, activePlayer, dice.count, addLog]);
 
   // Setup modal handler
   const handleStartNewGame = (newPlayers: Player[], newDiceCount: 1 | 2) => {
@@ -594,9 +607,9 @@ export default function App() {
         backgroundImage: `radial-gradient(circle at 50% 20%, rgba(36, 22, 14, 0.7), rgba(12, 8, 6, 0.98))`
       }}
     >
-      {/* ----------------- TOP BAR (Responsive & Compact) ----------------- */}
-      <header className="sticky top-0 z-40 w-full max-w-full flex items-center justify-between gap-2 px-3 sm:px-6 py-2.5 bg-stone-950/90 backdrop-blur-md border-b border-amber-900/40">
-        {/* Zone 1: Brand Wordmark */}
+      {/* ----------------- TOP BAR (Compact & Unobtrusive) ----------------- */}
+      <header className="sticky top-0 z-30 w-full max-w-full flex items-center justify-between gap-2 px-2.5 sm:px-6 py-2 bg-stone-950/90 backdrop-blur-md border-b border-amber-900/40">
+        {/* Brand Wordmark */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <span className="text-lg sm:text-xl">⚡</span>
           <span className="font-cinzel text-xs sm:text-base font-bold tracking-wider text-amber-300">
@@ -604,14 +617,32 @@ export default function App() {
           </span>
         </div>
 
-        {/* Zone 2 & 3: Compact Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-3 text-xs">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 text-xs">
+          <button
+            type="button"
+            onClick={() => setIsIntroOpen(true)}
+            className="px-2 py-1 text-[11px] sm:text-xs text-amber-300 hover:text-amber-200 transition-colors font-cinzel cursor-pointer flex items-center gap-1 bg-stone-900/70 border border-amber-900/40 rounded-lg"
+            title="Ver animación del Castillo de Hogwarts"
+          >
+            <span>🏰</span>
+            <span className="hidden sm:inline">Hogwarts</span>
+          </button>
           <button
             type="button"
             onClick={() => setIsRulesOpen(true)}
-            className="px-2 py-1 text-[11px] sm:text-xs text-stone-300 hover:text-amber-300 transition-colors font-cinzel cursor-pointer"
+            className="px-2 py-1 text-[11px] sm:text-xs text-stone-300 hover:text-amber-300 transition-colors font-cinzel cursor-pointer flex items-center gap-1"
           >
-            Reglas
+            <span>📜</span>
+            <span className="hidden sm:inline">Reglas</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsDrawerOpen(true)}
+            className="px-2.5 py-1 text-[11px] sm:text-xs text-amber-300 bg-amber-950/80 border border-amber-600/50 rounded-lg hover:bg-amber-900 transition-colors font-cinzel font-bold cursor-pointer flex items-center gap-1 shadow"
+          >
+            <span>📊</span>
+            <span>Menú y Datos</span>
           </button>
           <button
             type="button"
@@ -619,7 +650,7 @@ export default function App() {
             className="px-2 py-1 text-[11px] sm:text-xs text-amber-400 font-semibold hover:text-amber-300 transition-colors font-cinzel cursor-pointer flex items-center gap-1"
           >
             <span>📦</span>
-            <span className="hidden xs:inline sm:inline">Exportar</span>
+            <span className="hidden md:inline">Exportar</span>
           </button>
           <button
             type="button"
@@ -631,7 +662,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => setIsSetupOpen(true)}
-            className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-cinzel font-bold text-stone-950 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-md cursor-pointer whitespace-nowrap"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-cinzel font-bold text-stone-950 bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg hover:brightness-110 active:scale-[0.98] transition-all shadow-md cursor-pointer whitespace-nowrap"
           >
             Nueva
           </button>
@@ -662,9 +693,16 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-stone-400 hidden sm:inline font-cinzel">
-            {activePlayers.map(p => HOUSES[p.house].name).join(' · ')}
-          </span>
+          <button
+            type="button"
+            onClick={() => setIsDrawerOpen(true)}
+            className="text-[10px] sm:text-xs text-amber-300/90 hover:text-amber-200 font-cinzel flex items-center gap-1.5 bg-stone-900 px-2 py-0.5 rounded-lg border border-amber-900/40 cursor-pointer"
+          >
+            <span>{HOUSES[activePlayer.house].animalIcon}</span>
+            <span className="font-bold">{activePlayer.name}</span>
+            <span className="text-stone-400 hidden xs:inline">({HOUSES[activePlayer.house].name})</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setIsFreeMoveMode(f => !f)}
@@ -679,23 +717,21 @@ export default function App() {
         </div>
       </div>
 
-      {/* ----------------- MAIN VIEWPORT (Device-Adapted) ----------------- */}
-      <main className="flex-1 w-full max-w-6xl mx-auto p-2 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-5 items-start">
-        {/* LEFT / CENTER: BOARD CONTAINER */}
-        <section className="lg:col-span-7 flex flex-col items-center gap-2.5 w-full max-w-full overflow-hidden">
-          {/* SVG Parchis Board */}
-          <Board
-            players={activePlayers}
-            activeHouse={activePlayer.house}
-            legalMoves={legalMoves}
-            selectedTokenId={selectedTokenId}
-            onSelectToken={(_, id) => setSelectedTokenId(id)}
-            onExecuteMove={executeMove}
-            zoomLevel={1.0}
-          />
+      {/* ----------------- FULL-SCREEN HERO BOARD VIEWPORT (Optimized for iPad & Mobile) ----------------- */}
+      <main className="flex-1 w-full max-w-full flex flex-col items-center justify-center p-1 sm:p-2 relative select-none">
+        {/* SVG Parchis Board - Full Viewport Presence */}
+        <Board
+          players={activePlayers}
+          activeHouse={activePlayer.house}
+          legalMoves={legalMoves}
+          selectedTokenId={selectedTokenId}
+          onSelectToken={(_, id) => setSelectedTokenId(id)}
+          onExecuteMove={executeMove}
+        />
 
-          {/* MANUAL MOVEMENT PANEL (Right underneath the board) */}
-          <div className="w-full max-w-[min(100vw-20px,580px)] mx-auto">
+        {/* Free Move / Fine Control Panel (rendered when piece selected or free move mode is active) */}
+        {(selectedTokenId !== null || isFreeMoveMode) && (
+          <div className="w-full max-w-xl mx-auto mt-2 px-2">
             <ManualMovePanel
               selectedTokenId={selectedTokenId}
               activePlayer={activePlayer}
@@ -708,103 +744,63 @@ export default function App() {
               onToggleFreeMoveMode={() => setIsFreeMoveMode(f => !f)}
             />
           </div>
-        </section>
-
-        {/* RIGHT: CONTROL PANEL & GREAT HALL HUD */}
-        <aside className="lg:col-span-5 flex flex-col gap-3 w-full max-w-[min(100vw-20px,580px)] mx-auto">
-          {/* Active Player Card */}
-          <div
-            className="p-3 sm:p-4 rounded-2xl border shadow-xl flex items-center justify-between"
-            style={{
-              backgroundColor: 'rgba(26, 18, 13, 0.95)',
-              borderColor: HOUSES[activePlayer.house].secondaryColor
-            }}
-          >
-            <div className="flex items-center gap-3 min-w-0">
-              <div
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center text-xl sm:text-2xl shadow-lg border-2 shrink-0"
-                style={{
-                  backgroundColor: HOUSES[activePlayer.house].primaryColor,
-                  borderColor: HOUSES[activePlayer.house].secondaryColor
-                }}
-              >
-                <span>{HOUSES[activePlayer.house].animalIcon}</span>
-              </div>
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-[11px] uppercase tracking-wider text-amber-400/90 font-cinzel font-semibold">
-                  Turno de la Casa
-                </p>
-                <h2 className="text-base sm:text-lg font-bold font-cinzel truncate text-amber-100">
-                  {activePlayer.name}
-                </h2>
-                <p className="text-[11px] text-stone-400 font-cinzel truncate">
-                  {HOUSES[activePlayer.house].name} · {activePlayer.type === 'bot' ? 'Mago IA' : 'Jugador Humano'}
-                </p>
-              </div>
-            </div>
-
-            {dice.pendingBonus !== null && (
-              <div className="px-2.5 py-1 rounded-xl bg-amber-500 text-stone-950 font-bold font-mono text-xs shadow-md animate-pulse">
-                +{dice.pendingBonus}
-              </div>
-            )}
-          </div>
-
-          {/* Graphical 3D Dice Roller */}
-          <DiceRoller
-            dice={dice}
-            currentHouse={activePlayer.house}
-            isBotTurn={isBotTurn}
-            onRoll={handleRollDice}
-            onDieSelect={idx => setSelectedDieIndex(idx)}
-            selectedDieIndex={selectedDieIndex}
-            onDiceCountChange={cnt => setDice(d => ({ ...d, count: cnt }))}
-          />
-
-          {/* Players Status Grid */}
-          <PlayersHUD
-            players={activePlayers}
-            activeHouse={activePlayer.house}
-            onTogglePlayerType={handleTogglePlayerType}
-          />
-
-          {/* Game Event Chronicle (Log) */}
-          <div className="p-3 rounded-2xl bg-stone-950/70 border border-amber-900/40 backdrop-blur-md flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-amber-400/80 font-cinzel">
-                Crónica de Hogwarts
-              </span>
-              <button
-                type="button"
-                onClick={handleResetGame}
-                className="text-[10px] text-stone-400 hover:text-amber-300 font-cinzel"
-              >
-                Reiniciar fichas
-              </button>
-            </div>
-            <div className="h-24 sm:h-28 overflow-y-auto space-y-1 pr-1 text-[11px] text-stone-300">
-              {history.map(item => (
-                <div key={item.id} className="flex items-start gap-1">
-                  <span className="text-amber-400 shrink-0 font-bold">✦</span>
-                  <span
-                    className={
-                      item.type === 'capture'
-                        ? 'text-red-300 font-semibold'
-                        : item.type === 'goal'
-                        ? 'text-emerald-300 font-semibold'
-                        : item.type === 'extra_turn'
-                        ? 'text-amber-300'
-                        : 'text-stone-300'
-                    }
-                  >
-                    {item.text}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
+        )}
       </main>
+
+      {/* ----------------- TRANSIENT TURN ANNOUNCEMENT POP-UP (Appears and auto-disappears) ----------------- */}
+      <TurnAnnouncementModal
+        player={activePlayer}
+        isOpen={isAnnouncingTurn && !isIntroOpen && !winner}
+        onFinish={() => setIsAnnouncingTurn(false)}
+      />
+
+      {/* ----------------- CENTER DICE ROLLER (Appears in center for rolling, then disappears) ----------------- */}
+      <CenterDiceModal
+        isOpen={!isAnnouncingTurn && dice.canRoll && !isIntroOpen && !winner}
+        dice={dice}
+        activePlayer={activePlayer}
+        isBotTurn={isBotTurn}
+        onRoll={handleRollDice}
+        onDiceCountChange={cnt => setDice(d => ({ ...d, count: cnt }))}
+      />
+
+      {/* ----------------- SIDE DICE HUD (Docks to the side showing rolled numbers) ----------------- */}
+      <SideDiceHUD
+        activePlayer={activePlayer}
+        dice={dice}
+        selectedTokenId={selectedTokenId}
+        availableMovesForSelectedToken={availableMovesForSelectedToken}
+        selectedDieIndex={selectedDieIndex}
+        onDieSelect={idx => setSelectedDieIndex(idx)}
+        onOpenDrawer={() => setIsDrawerOpen(true)}
+        onDeselectToken={() => setSelectedTokenId(null)}
+      />
+
+      {/* ----------------- POP-UP MENU DRAWER (Turn, 3D Dice, Roster & Stats) ----------------- */}
+      <TurnDrawer
+        isOpen={isDrawerOpen}
+        onClose={() => setIsDrawerOpen(false)}
+        activePlayer={activePlayer}
+        players={activePlayers}
+        playerCount={playerCount}
+        dice={dice}
+        isBotTurn={isBotTurn}
+        onRollDice={handleRollDice}
+        onDieSelect={idx => setSelectedDieIndex(idx)}
+        selectedDieIndex={selectedDieIndex}
+        onDiceCountChange={cnt => setDice(d => ({ ...d, count: cnt }))}
+        onTogglePlayerType={handleTogglePlayerType}
+        onChangePlayerCount={handleChangePlayerCount}
+        onResetGame={handleResetGame}
+        onOpenRules={() => setIsRulesOpen(true)}
+        history={history}
+      />
+
+      {/* ----------------- HOGWARTS CASTLE INTRO ANIMATION MODAL ----------------- */}
+      <HogwartsIntroModal
+        isOpen={isIntroOpen}
+        onClose={() => setIsIntroOpen(false)}
+      />
 
       {/* ----------------- MODALS ----------------- */}
       <SetupModal

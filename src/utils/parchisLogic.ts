@@ -11,8 +11,8 @@ import {
 
 export function getStepsToCorridorEntry(house: HouseId, currentPos: number): number {
   const entry = HOUSES[house].corridorEntryTile;
-  if (house === 'gryffindor') {
-    // Entrance is 68
+  if (entry === 68) {
+    // Entrance is 68 (wraps around to corridor)
     return 68 - currentPos;
   }
   if (currentPos > entry) {

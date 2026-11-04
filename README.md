@@ -1,65 +1,47 @@
 # Parchís de Hogwarts - Las 4 Casas 🧙‍♂️🎲
 
-Una webapp mágica y moderna del clásico juego del Parchís adaptada con las cuatro casas de Hogwarts (**Gryffindor, Slytherin, Ravenclaw y Hufflepuff**), diseñada especialmente para jugar en navegadores de **iPhone, iPad (Safari touch)** y ordenadores.
+Una webapp mágica y moderna del clásico juego del Parchís adaptada con las cuatro casas de Hogwarts (**Gryffindor, Slytherin, Ravenclaw y Hufflepuff**), diseñada especialmente para jugar a pantalla completa en navegadores de **iPhone, iPad (Safari touch)** y ordenadores.
 
 ---
 
-## ✨ Características Principales
+## ✨ Nuevas Características V2
 
-- **Las 4 Casas Emblemáticas**:
-  - 🦁 **Gryffindor**: Rojo carmesí y oro noble (Harry Potter). Salida en casilla 5.
-  - 🐍 **Slytherin**: Verde esmeralda y plata bruñida (Draco Malfoy). Salida en casilla 22.
-  - 🦅 **Ravenclaw**: Azul zafiro y bronce estelar (Luna Lovegood). Salida en casilla 39.
-  - 🦡 **Hufflepuff**: Amarillo canario y obsidiana (Cedric Diggory). Salida en casilla 56.
-- **De 1 a 4 Jugadores**: Juega en solitario contra Magos Bots con IA inteligente o en modo multijugador local pasa-y-juega con amigos y familia.
-- **Tirador de 1 o 2 Dados**:
-  - Elige jugar con **1 dado** tradicional o con **2 dados** (con opción de repartir valores entre fichas o sumarlos).
-  - Animación 3D realista con física de giro y cubilete mágico.
-  - Turno extra al sacar un 6 (o dobles con 2 dados).
-- **Tablero Tradicional Fiel de 68 Casillas**:
-  - 12 casillas seguras (incluidas las 4 salidas).
-  - Regla de barreras y puentes (máximo 2 fichas por casilla).
-  - Capturas mágicas (*¡Expelliarmus!*) con bonificación de +20 casillas.
-  - Pasillo de llegada y entrada al Gran Comedor / Castillo de Hogwarts con bonificación de +10 casillas.
-- **Efectos de Sonido Mágicos (Web Audio API)**:
-  - Sonidos sintetizados 100% nativos (sin descargas externas): dados de madera rodando, hechizos de captura, arpegios de salida y fanfarria triunfal de la Copa de las Casas.
-- **Optimizado para iOS y Safari Móvil**:
-  - Compatible con iPhone y iPad: soporte táctil nativo con hitboxes ergonómicos ($\ge 44\text{px}$).
-  - Zoom interactivo, centrado automático y adaptación apaisada / vertical.
-  - Guardado automático en `localStorage` para reanudar la partida en cualquier momento.
+- 🏰 **Animación del Castillo de Hogwarts**:
+  - Animación cinematográfica del Castillo de Hogwarts bajo las estrellas con partículas mágicas doradas al iniciar la aplicación.
+  - Gran celebración de fuegos artificiales y Copa de las Casas con el Castillo de Hogwarts de fondo al ganar la partida.
+- 📱 **Visión a Pantalla Completa en iPad y Móviles**:
+  - El tablero de Parchís ahora aprovecha el 100% del alto y ancho disponible en la pantalla del iPad sin paneles laterales invasivos.
+- 📊 **Menú Emergente (Popup / Drawer) de Turnos y Datos**:
+  - Los turnos activos, estadísticas de fichas de cada casa, tirador de dados 3D, selección de 1 a 4 jugadores y crónica de hechizos se despliegan en un cómodo menú emergente pulsando **"📊 Menú y Datos"** o en el HUD inferior flotante.
+- 🪄 **Movimiento Táctil Intuitivo**:
+  - Toca tu ficha: las casillas de destino válidas se iluminan en el tablero como portales mágicos giratorios con el valor `+N`. Toca la casilla iluminada para mover.
+  - Controles manuales y modo libre opcional para pasos finos o partidas personalizadas.
+- 📜 **Normas Clásicas del Parchís Español**:
+  - Recorrido oficial de 68 casillas numeradas.
+  - 12 casillas seguras (★) donde no se puede capturar.
+  - Salida con un 5 (casillas 5, 22, 39, 56).
+  - Repetición de turno al sacar un 6 (o dobles). Si sacas tres 6 seguidos, la última ficha vuelve a casa.
+  - ¡Expelliarmus! (captura de fichas rivales) otorgando una bonificación clásica de **+20 casillas**.
+  - Llegada a meta en el Castillo de Hogwarts otorgando **+10 casillas** de bonificación.
+  - Barreras o puentes con 2 fichas en casillas seguras.
+- 📦 **Despliegue Instantáneo en GitHub Pages (Archivo Único)**:
+  - Todo el proyecto (código, estilos, imágenes y sonidos) está empaquetado en un único archivo `index.html`. Puedes subirlo directamente desde Safari en tu iPhone sin necesidad de crear carpetas ni lidiar con `.nojekyll`.
 
 ---
 
-## 🚀 Cómo Desplegar en GitHub Pages (Paso a Paso)
+## 🚀 Despliegue en GitHub Pages (`Potterchis`)
 
-Sigue estos sencillos pasos para publicar tu juego gratis en GitHub Pages:
+Si estás utilizando el repositorio **`pg094273-dot/Potterchis`**:
 
-### Paso 1: Crear el repositorio en GitHub
-1. Inicia sesión en tu cuenta de [GitHub](https://github.com).
-2. Haz clic en el botón verde **New** (Nuevo repositorio).
-3. Nombra tu repositorio: `parchis-hogwarts`.
-4. Elige si quieres que sea **Público** (necesario para GitHub Pages en cuentas gratuitas).
-5. Haz clic en **Create repository**.
-
-### Paso 2: Subir los archivos
-1. Puedes descargar el paquete completo desde el botón **"📦 Exportar para GitHub"** dentro de la propia aplicación.
-2. Sube el archivo `index.html` y este `README.md` a la raíz de tu repositorio `parchis-hogwarts`.
-3. Haz clic en **Commit changes**.
-
-### Paso 3: Activar GitHub Pages
-1. En tu repositorio, entra en **Settings** (pestaña superior derecha con engranaje).
-2. En el menú lateral izquierdo, haz clic en **Pages**.
-3. En la sección **Build and deployment**:
-   - **Source**: Selecciona `Deploy from a branch`.
-   - **Branch**: Selecciona `main` (o `master`) y la carpeta `/ (root)`.
-4. Pulsa **Save**.
-
-### Paso 4: ¡A disfrutar de la partida!
-En unos 60 segundos, GitHub Pages habrá publicado tu juego en la URL:
-```text
-https://TU-USUARIO.github.io/parchis-hogwarts/
-```
-Puedes abrir este enlace en Safari desde tu iPhone o iPad y agregarlo a la Pantalla de Inicio mediante el botón **Compartir → Añadir a pantalla de inicio** para disfrutarlo como una app nativa a pantalla completa.
+1. Descarga el archivo único **`index.html`** (o el archivo `.zip`) desde el botón **"📦 Exportar"** de la app.
+2. Abre tu repositorio en GitHub: [https://github.com/pg094273-dot/Potterchis](https://github.com/pg094273-dot/Potterchis).
+3. Pulsa en **Add file → Upload files** y arrastra o selecciona **`index.html`**.
+4. Pulsa el botón verde **Commit changes**.
+5. Ve a **Settings → Pages**:
+   - En **Source**, asegúrate de tener seleccionado **Deploy from a branch**.
+   - En **Branch**, selecciona **main** y **/ (root)**. Pulsa **Save**.
+6. En unos momentos tu juego estará online en:
+   **[https://pg094273-dot.github.io/Potterchis/](https://pg094273-dot.github.io/Potterchis/)**
 
 ---
 
